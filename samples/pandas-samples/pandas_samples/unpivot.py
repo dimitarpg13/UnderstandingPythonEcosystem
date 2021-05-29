@@ -34,4 +34,11 @@ def unpivot(frame):
     }
     return pd.DataFrame(data, columns=["date", "variable", "value"])
 
-df = unpivot(tm.makeTimeDataFrame(3))
+df = tm.makeTimeDataFrame(3)
+
+print("Just a random frame: {}".format(df))
+
+df_pivoted = unpivot(df)
+
+print("After performing unpivot: {}".format(df_pivoted))
+
