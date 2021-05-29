@@ -17,3 +17,11 @@ print("Index: {}".format(index))
 s = pd.Series(np.random.randn(8), index=index)
 
 print("Series: {}".format(s))
+
+iterables = [["bar", "baz", "foo", "qux"], ["one", "two"]]
+
+print("list of lists Iterables: {}".format(iterables))
+
+mi = pd.MultiIndex.from_product(iterables, names=["first", "second"])
+
+print("MultiIndex from product Iterables: {}".format(mi))
