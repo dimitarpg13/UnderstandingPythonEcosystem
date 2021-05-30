@@ -1,0 +1,12 @@
+[submodule "arrow"]
+	path = arrow
+	url = https://github.com/dimitarpg13/arrow.git
+[submodule "flatbuffers"]
+	path = flatbuffers
+	url = https://github.com/dimitarpg13/flatbuffers.git
+[submodule "numpy"]
+	path = numpy
+	url = https://github.com/dimitarpg13/numpy.git
+[submodule "pandas"]
+	path = pandas
+	url = https://github.com/dimitarpg13/pandas.git
