@@ -120,4 +120,27 @@ asyncio.run(main())
 * a _coroutine function_: an `async def` function;
 
 * a _coroutine object_: an object returned by calling a _coroutine function_.
-asyncio also supports legacy generator-based coroutines.
+asyncio also supports legacy [generator-based coroutines]().
+
+
+## Generator-based Coroutines
+
+*_Note_*: Support for generator-based coroutines is *deprecated* and is removed in Python 3.11
+
+Generator-based coroutines predate async/await syntax. They are Python generators that use `yield from` expressions to
+await on Futures and other coroutines.
+
+Generator-based coroutines should be decorated with `@asyncio.coroutine`, although this is not enforced.
+This decorator enables legacy generator-based coroutines to be compatible with async/await code:
+
+```python
+@asyncio.coroutine
+def old_style_coroutine():
+    yield from asyncio.sleep(1)
+
+async def main():
+    await old_style_coroutine()
+
+```
+
+
