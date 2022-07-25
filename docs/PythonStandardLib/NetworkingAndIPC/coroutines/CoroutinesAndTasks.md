@@ -125,7 +125,7 @@ asyncio also supports legacy [generator-based coroutines]().
 
 ## Generator-based Coroutines
 
-*_Note_*: Support for generator-based coroutines is *deprecated* and is removed in Python 3.11
+*_Note_*: Support for generator-based coroutines is *deprecated* since Python 3.8 and is removed in Python 3.11
 
 Generator-based coroutines predate async/await syntax. They are Python generators that use `yield from` expressions to
 await on Futures and other coroutines.
@@ -143,4 +143,12 @@ async def main():
 
 ```
 
+`asyncio.iscoroutine(obj)`
+    Return `True` if _obj_ is a coroutine object
+    This method is different from `inspect.iscoroutine()` because it returns `True` for generator-based coroutines.
+
+`asyncio.iscoroutinefunction(func)`
+    Return `True` if _func_ is a coroutine function.
+    This method is different from `inspect.iscoroutinefunction()` because it returns `True` for generator-based 
+    coroutine functions decorated with `@coroutine``.
 
