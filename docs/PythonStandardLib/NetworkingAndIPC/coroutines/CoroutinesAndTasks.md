@@ -21,6 +21,5 @@ Note that simply calling a coroutine will not schedule it to be executed:
 
 ```
 >>> main()
+<coroutine object main at 0x1053bb7c8>
 ```
-<font color="red">coroutine object main at 0x1053bb7c8</font>
-
