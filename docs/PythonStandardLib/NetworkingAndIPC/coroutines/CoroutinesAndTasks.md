@@ -114,3 +114,10 @@ async def main():
 
 asyncio.run(main())
 ```
+
+*_Note_*: in this document the term "coroutine" is used for two closely related concepts:
+
+* a _coroutine function_: an `async def` function;
+
+* a _coroutine object_: an object returned by calling a _coroutine function_.
+asyncio also supports legacy generator-based coroutines.
