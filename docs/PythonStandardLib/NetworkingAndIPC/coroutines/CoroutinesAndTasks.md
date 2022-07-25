@@ -120,7 +120,7 @@ asyncio.run(main())
 * a _coroutine function_: an `async def` function;
 
 * a _coroutine object_: an object returned by calling a _coroutine function_.
-asyncio also supports legacy [generator-based coroutines](##Generator-based-Coroutines).
+asyncio also supports legacy [generator-based coroutines](#Generator-based-Coroutines).
 
 
 ## Generator-based Coroutines
