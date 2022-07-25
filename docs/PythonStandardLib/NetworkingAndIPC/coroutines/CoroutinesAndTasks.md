@@ -58,4 +58,59 @@ world
 finished at 17:13:55
 ```
 
+* The `asyncio.create_task()` function to run coroutines concurrently as asyncio Tasks.
 
+Let's modify the above example and run two `say_after` coroutines _concurrently_:
+
+```python
+async def main():
+    task1 = asyncio.create_task(
+        say_after(1, 'hello'))
+
+    task2 = asyncio.create_task(
+        say_after(2, 'world'))
+
+    print(f"started at {time.strftime('%X')}")
+
+    # wait until both tasks are completed (should take around 2 seconds)
+    await task1
+    await task2
+
+    print(f"finished at {time.strftime('%X')}")
+```
+
+```
+started at 17:14:32
+hello
+world
+finished at 17:14:34
+```
+
+## Awaitables
+
+We say that an object is an *awaitable* object if it can be used in an await expression. 
+Many asyncio APIs are designed to accept awaitables.
+
+There are three main types of _awaitable_ objects: *coroutines*, *Tasks*, and *Futures*.
+
+### Coroutines
+
+Python coroutines are _awaitables_ and therefore can be awaited from other coroutines:
+
+```python
+import asyncio
+
+async def nested():
+    return 42
+
+async def main():
+    # Nothing happens if we just call "nested()".
+    # A coroutine object is created but not awaited,
+    # so it *won't run at all*.
+    nexted()
+
+    # Let's do it differently now and await it:
+    print(await nested())
+
+asyncio.run(main())
+```
