@@ -122,8 +122,58 @@ asyncio.run(main())
 * a _coroutine object_: an object returned by calling a _coroutine function_.
 asyncio also supports legacy [generator-based coroutines](#Generator-based-Coroutines).
 
+### Tasks
 
-## Generator-based Coroutines
+_Tasks_ are used to schedule coroutines _concurrently_.
+When a coroutine is wrapped into a _Task_ with functions like `asyncio.create_task()` the coroutine is automatically 
+scheduled to run soon:
+
+```python
+import asyncio
+
+async def nested():
+    return 42
+
+async def main():
+    # Schedule nested() to run soon concurrently
+    # with main()
+    task = asyncio.create_task(nested())
+
+    # "task" can now be used to cancel "nested()", or 
+    # can simply be awaited to wait until it is completee:
+    await task
+
+asyncio.run(main())
+```
+
+### Futures
+
+A Future is a special *low-level* awaitable object that represents an *eventual result* of an asynchronous operation.
+
+When a Future object is _awaited_ it means that the coroutine will wait until the Future is resolved in some other place.
+
+Future objects in asyncio are needed to allow callback-based code to be used with async/await.
+
+Normally *there is no need* to create Future objects at the application level code. 
+
+Future objects, sometimes exposed by libraries and some asyncio APIs, can be awaited:
+
+```python
+async def main():
+    await function_that_returns_a_future_object()
+
+    # this is also valid:
+    await asyncio.gather(
+        function_that_returns_a_future_object(),
+        some_python_coroutine()
+    )
+```
+
+A good example of low-level function that returns a Future object is [loop.run_in_executor()](#loop.run_in_executor)
+
+## Miscelaneous
+
+### Generator-based Coroutines
 
 *_Note_*: Support for generator-based coroutines is *deprecated* since Python 3.8 and is removed in Python 3.11
 
@@ -150,5 +200,55 @@ async def main():
 `asyncio.iscoroutinefunction(func)`
     Return `True` if _func_ is a coroutine function.
     This method is different from `inspect.iscoroutinefunction()` because it returns `True` for generator-based 
-    coroutine functions decorated with `@coroutine``.
+    coroutine functions decorated with `@coroutine`.
 
+
+### loop.run_in_executor
+
+Syntax:
+_awaitable_ `loop.run_in_executor(executor, func, *args)`
+
+  Arrange for _func_ to be called in the specified executor.
+
+  The _executor_ argument should be an `concurrent.futures.Executor` instance. The default executor is used if _executor_ is `None`.
+
+  Example:
+
+  ```python
+  import asyncio
+  import concurrent.futures
+
+  def blocking_io():
+      # File operations (such as logging) can block the
+      # event loop: run them in a thread pool.
+      with open('/dev/urandom', 'rb') as f:
+          return f.read(100)
+
+  def cpu_bound():
+      # CPU-bound operations will block the event loop:
+      # in general it is preferrable to run them in a
+      # process  pool.
+      return sum(i * i for i in range(10 ** 7))
+
+  async def main():
+      loop = asyncio.get_running_loop()
+
+      ## Options:
+
+      # 1. Run in the default loop's executor:
+      result = await loop.run_in_executor(
+          None, blocking_io)
+      print('default thread pool', result)
+
+      # 2. Run in a custom thread pool:
+      with concurrent.futures.ThreadPoolExecutor() as pool:
+          result = await loop.run_in_executor(pool, blocking_io)
+          print('custom thread pool', result)
+
+      # 3. Run in a custom process pool:
+      with concurrent.futures.ProcessPoolExecutor() as pool:
+          result = await loop.run_in_executor(pool, cpu_bound)
+          print('custom process pool', result)
+
+  asyncio.run(main())
+  ```
