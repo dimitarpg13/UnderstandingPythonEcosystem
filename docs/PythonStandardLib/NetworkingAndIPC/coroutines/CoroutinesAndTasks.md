@@ -171,6 +171,10 @@ async def main():
 
 A good example of low-level function that returns a Future object is [loop.run_in_executor()](#Running-in-executor-loop)
 
+## Running an asyncio Program
+
+```py asyncio.run()```
+
 ## Miscelaneous
 
 ### Generator-based Coroutines
