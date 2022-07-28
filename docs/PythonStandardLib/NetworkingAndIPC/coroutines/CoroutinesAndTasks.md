@@ -169,7 +169,7 @@ async def main():
     )
 ```
 
-A good example of low-level function that returns a Future object is [loop.run_in_executor()](#loop-run-in-executor)
+A good example of low-level function that returns a Future object is [loop.run_in_executor()](#loop.run_in_executor)
 
 ## Miscelaneous
 
