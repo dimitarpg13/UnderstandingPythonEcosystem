@@ -169,7 +169,7 @@ async def main():
     )
 ```
 
-A good example of low-level function that returns a Future object is [loop.run_in_executor()](#loop.run_in_executor)
+A good example of low-level function that returns a Future object is [loop.run_in_executor()](#loop-run-in-executor)
 
 ## Miscelaneous
 
@@ -203,7 +203,7 @@ async def main():
     coroutine functions decorated with `@coroutine`.
 
 
-### loop.run_in_executor
+### loop run in executor
 
 Syntax:
 _awaitable_ `loop.run_in_executor(executor, func, *args)`
