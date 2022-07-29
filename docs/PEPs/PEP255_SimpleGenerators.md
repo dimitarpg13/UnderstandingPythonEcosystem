@@ -32,4 +32,24 @@ between `.next()` invocations, and the reader need only glance at `tokenize.toke
 chore that would be. Or picture a recursive algorithm for producing the nodes of a general tree structure: to cast that 
 into an iterator framework requires removing the recursion manually and maintaining the state of the traversal by hand.
 
+A fourth option is to run the producer and consumer in separate threads. This allows both to maintain their states in 
+natural ways, and so is pleasant for both. Indeed, `Demo/threads/Generator.py` in the Python source distribution provides
+a usable synchronized-communication class for doing that in a general way. This does not work on platforms without threads,
+though and is very slow on platforms that do (compared to what is achievable without threads).
 
+Pleasant solution: provide a kind of function that can return an intermediate result("the next value") to its caller, but 
+maintaining the function's local state so that the function can be resumed again right where it left off. A very simple 
+example:
+
+```python
+def fib():
+    a, b = 0, 1
+    while 1:
+        yield b
+        a, b = b, a+b
+```
+
+When `fib()` is first invoked, it sets `a` to `0` and `b` to `1`, then yields `b` back to its caller. The caller sees `1`. When `fib` is
+resumed, from its point of view the `yield` statement is really the same as, say a `print` statement: `fib` continues after
+the yield with all local state intact. `a` and `b` become `1` and `1`, and `fib` loops back to the `yield`, yielding `1` to its
+invoker. 
