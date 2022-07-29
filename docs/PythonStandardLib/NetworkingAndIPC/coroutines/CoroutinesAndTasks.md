@@ -173,7 +173,7 @@ A good example of low-level function that returns a Future object is [loop.run_i
 
 ## Running an asyncio Program
 
-```py asyncio.run()```
+```{py}asyncio.run()```
 
 ## Miscelaneous
 
