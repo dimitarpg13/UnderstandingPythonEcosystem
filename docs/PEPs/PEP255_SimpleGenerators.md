@@ -52,4 +52,26 @@ def fib():
 When `fib()` is first invoked, it sets `a` to `0` and `b` to `1`, then yields `b` back to its caller. The caller sees `1`. When `fib` is
 resumed, from its point of view the `yield` statement is really the same as, say a `print` statement: `fib` continues after
 the yield with all local state intact. `a` and `b` become `1` and `1`, and `fib` loops back to the `yield`, yielding `1` to its
-invoker. 
+invoker. From `fib`'s point of view it is just delivering a sequence of results, as if via callback. But from it caller point of 
+view,the `fib` invocation is an iterable object that can be resumed at will. As in the thread approach, this allows both sides
+to be coded in the most natural way; but unlike the thread approach, this can be done efficiently and on all platforms. Indeed,
+resuming a generator should be no more expensive than a function call.
+
+The same kind of approach applies to many producer/consumer functions. For example, `tokenize.py` could yield the next token 
+instead of invoking a callback function with it as an argument, and tokenize clients could iterate over the tokens in a natural
+way: a Python generator is a kind of Python iterator, but an especially powerful kind.
+
+## Specification: Yield
+
+A new statement is introduced:
+
+```
+yield_stmt: "yield" expression list
+```
+
+The `yield` statement may only be used inside functions. A function that contains a `yield` statement is called a generator function.
+A generator function is an ordinary function in all respects, but has the new `CO_GENERATOR` flag set in the code object's `co_flags`
+member.
+
+When a generator function is called, the actual arguments are bound to function-local formal argument names in the usual waym but
+no code in the body of the function is executed. 
