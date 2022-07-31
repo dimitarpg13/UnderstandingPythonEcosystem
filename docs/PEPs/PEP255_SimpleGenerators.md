@@ -74,4 +74,51 @@ A generator function is an ordinary function in all respects, but has the new `C
 member.
 
 When a generator function is called, the actual arguments are bound to function-local formal argument names in the usual waym but
-no code in the body of the function is executed. 
+no code in the body of the function is executed. Instead a generator-iterator object is returned; this conforms to the iterator protocol,
+so in particular can be used in for-loops in a natural way. Note that when the intent is clear from context, the unqualified name
+"generator" may be used to refer to a generator-function or a generator-iterator.
+
+Each time the `.next()` method of a generator-iterator is invoked, the code in the body of the generator-function is 
+executed until a `yield` or `return` statement (see below) is encountered, or until the end of the body is reached.
+
+If a `yield` statement is encountered, the state of the function is frozen, and the value of _expression_list_ is returned to `.next()`'s
+caller. By "frozen" we mean that all local state is retained, including the current bindings of local variables, the instruction pointer,
+and the internal evaluation stack: enough information is saved so that the next time `.next()` is invoked, the function can proceed exactly
+as if the `yield` statement were just another external call. 
+
+_Restriction_: A `yield` statement is not allowed in the `try` clause of a `try/finally` construct. The difficulty is that there's no 
+guarantee the generator will ever be resumed hence no guarantee that the finally block will ever get executed; that 
+
+## a Note on `try-finally` block
+
+Let us consider the following example code:
+
+```python
+from sys import argv
+
+try:
+   x = argv[1]  # set x to the first argument if one is passed
+finally:
+   x = 'default'  # if no argument is passed (throwing an exception above) set x to 'default'
+
+print(x)
+```
+
+Executing the code above does not print `default` instead an `IndexError` is raised.
+
+```python
+Traceback (most recent call last):
+  File ".\foo.py", line 4, in <module>
+    x = argv[1]
+IndexError: list index out of range
+```
+
+This is expected behavior as `try:...finally:...` alone *doesn't catch exceptions*. Only the `except` clause of a
+`try:...except:...` does.
+`try:...finally:...` only guarantees that the statements under `finally` are always executed, whatever happens in the `try` section, 
+whether the block succeeds or is exited because of a `break`, `continue`, `return` or an exception. So `try:...finally:...` is 
+_great_ for cleaning up resources; This code runs no matter what happens in the block (but note that the `with` statement and
+context managers let you encapsulate cleanup behavior too).
+
+If one needs to handle an `IndexError` exception in a `try` block, the one _must_ use an `except` clause. 
+

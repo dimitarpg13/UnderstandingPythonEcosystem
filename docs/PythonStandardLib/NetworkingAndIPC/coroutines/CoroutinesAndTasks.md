@@ -173,7 +173,10 @@ A good example of low-level function that returns a Future object is [loop.run_i
 
 ## Running an asyncio Program
 
-```{py}asyncio.run()```
+`asyncio.run(coro, *, debug=False)`
+    Execute the coroutine coro and return the result.
+
+    This function runs the passed coroutine, taking care of managing the 
 
 ## Miscelaneous
 
