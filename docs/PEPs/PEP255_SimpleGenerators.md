@@ -87,7 +87,22 @@ and the internal evaluation stack: enough information is saved so that the next 
 as if the `yield` statement were just another external call. 
 
 _Restriction_: A `yield` statement is not allowed in the `try` clause of a `try/finally` construct. The difficulty is that there's no 
-guarantee the generator will ever be resumed hence no guarantee that the finally block will ever get executed; that 
+guarantee the generator will ever be resumed hence no guarantee that the finally block will ever get executed; that is too much a
+violation of `finally`'s purpose to bear. 
+
+_Restriction_: A generator cannot be resumed while it is actively running:
+
+```python
+>>> def g():
+...     i = me.next()
+...     yield i
+>>> me = g()
+>>> me.next()
+Traceback (most recent call last):
+ ...
+ File "<string>", line 2, in g
+ValueError: generator already executing
+```
 
 ## a Note on `try-finally` block
 
