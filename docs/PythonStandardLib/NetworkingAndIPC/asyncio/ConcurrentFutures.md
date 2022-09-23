@@ -9,10 +9,12 @@ The asynchronous execution can be performed with threads, using `ThreadPoolExecu
 ## Executor Objects
 
 _class_ `concurrent.futures`.**Executor**
-    An abstract class that provides methods to execute calls asynchronously. It should not be used directly but through its concerete subclasses.
+
+An abstract class that provides methods to execute calls asynchronously. It should not be used directly but through its concerete subclasses.
 
 ```python
 submit(fn, /, *args, **kwargs)
 ```
-    Schedules the callable, _fn_, to be executed as `fn(*args, **kwargs)` and returns a `Future` object representing the execution of the callable.
+
+Schedules the callable, _fn_, to be executed as `fn(*args, **kwargs)` and returns a `Future` object representing the execution of the callable.
 
