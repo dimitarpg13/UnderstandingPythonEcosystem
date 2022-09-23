@@ -137,3 +137,39 @@ context managers let you encapsulate cleanup behavior too).
 
 If one needs to handle an `IndexError` exception in a `try` block, the one _must_ use an `except` clause. 
 
+## Specification: Return
+
+A generator function can also contain return statements of the form:
+
+```python
+   return
+```
+Note that an _expression list_ is not allowed on return statements in the body of a generator (although they may apppear in the 
+bodies of non-generator functions nested within the generator).
+
+When a return statement is encountered, control proceeds as in any function return, executing the appropriate `finally` clauses
+(if any exist). Then a `StopIteration` exception is raised, signalling that the iterator is exhausted. A `StopIteration` exception is 
+also raised if control flows off the end of the generator without an explicit return.
+
+Note that return means "I'm done, and have nothing interesting to return", for both generator functions and non-generator functions.
+
+Note that return isn't always equivalent to raising `StopIteration`: the difference lies in how enclosing `try/except` constructs
+are treated. For example:
+
+```python
+>>> def f1():
+...    try:
+...        return
+...    except:
+...        yield 1
+>>> print list(f1())
+[]
+```
+
+because, as in any function, `return` simply exists, but:
+
+```python
+>>> def f2():
+...    try:
+...    
+```
