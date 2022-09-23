@@ -12,7 +12,7 @@ _class_ `concurrent.futures`.**Executor**
 
 An abstract class that provides methods to execute calls asynchronously. It should not be used directly but through its concerete subclasses.
 
-  * ```python
+  ```python
   submit(fn, /, *args, **kwargs)
   ```
 
@@ -23,4 +23,28 @@ An abstract class that provides methods to execute calls asynchronously. It shou
       print(future.result())
   ```
 
-  * ```python```
+  ```python
+  map(func, *iterables, timeout=None, chinksize=1) 
+  ```
+
+  Similar to `map(func, *iterables)` except:
+
+  * the _iterables_ are collected immediatelly rather than lazily;
+  * _func_ is executed asynchronously and several calls to _func_ may be made concurrently.
+
+  The returned iterator raises a `concurrent.futures.TimeoutError` if `__next__()` is called and the result isn't available after _timeout_ seconds from the original call to `Executor.map()`. _timeout_ can be an `int` or a `float`. If _timeout_ is not specified, there is no limit to the wait time.
+
+If a _func_ call raises an exception, then that exception will be raised when its value is retrieved from the iterator.
+
+When using _ProcessPoolExecutor_, this method chops _iterables_ into a number of chunks which it submits to the pool as separate tasks. The (approximate) size of these chunks can be specified by setting _chunksize_ to a positive integer. For a very long iterables, using a large value for _chunksize_ can significantly improve performance compared to the default size of 1. With `ThreadPoolExecutor`, _chunksize_ has no effect.
+
+  ```python
+  shutdown(wait=True, *, cancel_futures=False)
+
+  ```
+
+  Signal the executor that it should free any resources that it is using when the currently pending futures are done executing. Calls to `Executor.submit()` and `Executor.map()` made after shutdown will raise `RuntimeError`.
+  If _wait_ is `True` then this method will not return until all the pending futures are done executing and the resources associated with the executor have been freed. If _wait_ is `False` then this method will return immediately and the resources associated with the executor will be freed when all pending futures are done executing. Regardless of the value of _wait_, the entire Python program will not exit until all pending futures are done executing.
+
+  If _cancel_futures_ is `True`, this method will cancel all pending futures that 
+
