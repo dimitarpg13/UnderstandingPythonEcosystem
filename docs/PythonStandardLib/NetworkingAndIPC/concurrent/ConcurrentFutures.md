@@ -46,5 +46,21 @@ When using _ProcessPoolExecutor_, this method chops _iterables_ into a number of
   Signal the executor that it should free any resources that it is using when the currently pending futures are done executing. Calls to `Executor.submit()` and `Executor.map()` made after shutdown will raise `RuntimeError`.
   If _wait_ is `True` then this method will not return until all the pending futures are done executing and the resources associated with the executor have been freed. If _wait_ is `False` then this method will return immediately and the resources associated with the executor will be freed when all pending futures are done executing. Regardless of the value of _wait_, the entire Python program will not exit until all pending futures are done executing.
 
-  If _cancel_futures_ is `True`, this method will cancel all pending futures that 
+  If _cancel_futures_ is `True`, this method will cancel all pending futures that the executor has not started running. Any futures that are completed or running won't be cancelled, regardless of the value of _cancel_futures_. 
+  If both _cancel_futures_ and _wait_ are `True`, all futures that the executor has started running will be completed prior to this method returning. The remaining futures are cancelled.
+
+  You can avoid haivng to call this method explicitly if you use the `with` statement, which will shutdown the `Executor`  (waiting as if `Executor.shutdown()` were called with _wait_ set to `True`):
+
+  ```python
+  import shutil
+  with ThreadPoolExecutor(max_workers=4) as e:
+      e.submit(shutil.copy, 'src1.txt', 'dest1.txt')
+      e.submit(shutil.copy, 'src2.txt', 'dest2.txt')
+      e.submit(shutil.copy, 'src3.txt', 'dest3.txt')
+      e.submit(shutil.copy, 'src4.txt', 'dest4.txt')
+  ```
+
+## `ThreadPoolExecutor`
+
+
 
