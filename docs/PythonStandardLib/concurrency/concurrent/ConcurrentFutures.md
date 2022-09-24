@@ -69,5 +69,5 @@ Deadlocks can occur when the callable associated with a `Future` waits on the re
 
 _class_ `concurrent.futures`.**ThreadPoolExecutor**(_max_workers=None_, _thread_name_prefix=''_, _initializer=None_, _initargs=()_)
 
-  An [`Executor`](###_class_ `concurrent.futures`.**Executor**) subclass
+  An [`Executor`](#class-concurrentfuturesExecutor) subclass
 
