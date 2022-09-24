@@ -8,7 +8,7 @@ The asynchronous execution can be performed with threads, using `ThreadPoolExecu
 
 ## Executor Objects
 
-_class_ `concurrent.futures`.**Executor**
+### _class_ `concurrent.futures`.**Executor**
 
 An abstract class that provides methods to execute calls asynchronously. It should not be used directly but through its concerete subclasses.
 
@@ -62,5 +62,12 @@ When using _ProcessPoolExecutor_, this method chops _iterables_ into a number of
 
 ## `ThreadPoolExecutor`
 
+`ThreadPoolExecutor` is an `Executor` subclass that uses a pool of threads to execute calls asynchronously.
 
+Deadlocks can occur when the callable associated with a `Future` waits on the results of another `Future`
+
+
+_class_ `concurrent.futures`.**ThreadPoolExecutor**(_max_workers=None_, _thread_name_prefix=''_, _initializer=None_, _initargs=()_)
+
+  An [`Executor`](###_class_ `concurrent.futures`.**Executor**) subclass
 
