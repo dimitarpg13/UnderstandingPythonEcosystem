@@ -67,7 +67,13 @@ When using _ProcessPoolExecutor_, this method chops _iterables_ into a number of
 Deadlocks can occur when the callable associated with a `Future` waits on the results of another `Future`
 
 
-_class_ `concurrent.futures`.**ThreadPoolExecutor**(_max_workers=None_, _thread_name_prefix=''_, _initializer=None_, _initargs=()_)
+### _class_ `concurrent.futures`.**ThreadPoolExecutor**(_max_workers=None_, _thread_name_prefix=''_, _initializer=None_, _initargs=()_)
 
-  An [`Executor`](#class-concurrentfuturesExecutor) subclass
+  An [`Executor`](#class-concurrentfuturesExecutor) subclass that uses a pool of at most _max_workers_ threads to execute calls asynchronously.
+
+  All threads enqueued to `ThreadPoolExecutor` will be joined before the interpreter can exit. Note that the exit handler which does this is executed _before_ any exit handlers added using _atexit_. This means exceptions in the main thread must be caught and handled in order to signal threads to exit gracefully.  For this reason, it is recommended that `ThreadPoolExecutor` not be used for long-running tasks.
+
+  _initializer_ is an optional callable that is called at the start of each worker thread; _initargs_ is a tuple of arguments passed to the initializer. Should _initializer_ raise an exception, all currently pending jobs will raise a `BrokenThreadPool`, as well as any atempt to submit more jobs to the pool.
+
+  _Changed in ver 3.8_: Default value of _max_workers_ is changed to `min(32, os.cpu_count() + 4)`. This default value preserves at least 5 workers for I/O bound tasks. It utilizes at most 32 CPU cores for CPU bound tasks which release the GIL.  
 
