@@ -96,4 +96,129 @@ You can also define a new exception that is unique to your module. For this, you
 static PyObject *SpamError;
 ```
 
+and initialize it in your module's init function (`PyInit_spam()`) with an exception object:
 
+```cpp
+PyMODINIT_FUNC
+PyInit_spam(void)
+{
+   PyObject *m;
+
+   m = PyModule_Create(&spammodule);
+   if (m == NULL)
+      return NULL;
+
+   SpamError = PyErr_NewException("spam.error", NULL, NULL);
+   Py_XINCREF(SpamError);
+   if (PyModule_AddObject(m, "error", SpamError) < 0) {
+      Py_XDECREF(SpamError);
+      Py_CLEAR(SpamError);
+      Py_DECREF(m);
+      return NULL;
+   }
+
+   return m;
+}
+```
+
+Note that the Python name for the exception object is `spam.error`. The `PyErr_NewException()` function may create a class with the base class being `Exception` (unless another class is passed in instead of `NULL`)
+
+
+_Details on_ `PyErr_NewException`:
+```cpp
+PyObject *PyErr_NewException(const char* name, PyObject *base, PyObject *dict)
+```
+return value: new reference
+This utility function creates and returns a new exception class. The _name_ argument must be the name of the new exception, a `C` string of the form `module.classname`. The _base_ and _dict_ arguments are normally `NULL`. This creates a class object derived from `Exception` (accessible in `C` as `PyExc_Exception`).
+
+The `__module__` attribute of the new class is set to the first part (up to the last dot) of the _name_ argument, and the class name is set to the last part (after the last dot). The _base_ argument can be used to specify alternate base classes; it can either be only one class or a tuple of classes. The _dict_ argument can be used to specify a dictionary of class variables and methods.
+
+Note also that the `SpamError` variable retains a reference to the newly created exception class; this is intentional! Since the exception could be removed from the module by external code, an owned reference to the class is needed to ensure that it will not be discarded, causing `SpamError` to become a dangling pointer. 
+Should it become a dangling pointer, `C` code which raises the exception could cause a core dump or other unintended side effects.
+
+We discuss the use of `PyMODINIT_FUNC` as a function return type later in this sample.
+
+The `spam.error` exception can be raised in your extension module using a call to `PyErr_SetString()` as shown below:
+
+```cpp
+static PyObject *
+spam_system(PyObject *self, PyObject *args)
+{
+   const char *command;
+   int sts;
+
+   if (!PyArg_ParseTuple(args, "s", &command))
+      return NULL;
+   sts = system(command);
+   if (sts < 0) {
+      PyErr_SetString(SpamError, "System command failed");
+      return NULL;
+   }
+   return PyLong_FromLong(sts);
+}
+```
+
+## Back to the Example
+
+Going back to our example function:
+
+```cpp
+if (!PyArg_ParseTuple(args, "s", &command))
+   return NULL;
+```
+
+It returns `NULL` (the error indicator for functions returning object pointers) if an error is detected in the argument list, relying on the exception set by `PyArg_ParseTuple()`. Otherwise the string value of the argument has been copied to the local variable `command`. 
+
+The next statement is a call to the Unix function `system()`, passing it the string we just got from `PyArg_ParseTuple()`:
+
+```cpp
+sts = system(command);
+```
+
+Our `spam.system()` function musty return the value of `sts` as a Python obejct. This is done using the function `PyLong_FromLong()`. 
+```cpp
+return PyLong_FromLong(sts);
+```
+In this case, it will return an integer object. If you have a `C` function that returns no useful argument (a function returning `void`), the corresponding Python function must return `None`. You need this idiom to do so (which is implemented by the `Py_RETURN_NONE` macro):
+
+```cpp
+Py_INCREF(Py_NONE);
+return Py_None;
+```
+
+`Py_None` is the `C` name for the special Python object `None`. It is a genuine Python object rather than a `NULL` pointer, which means "error" in most contexts, as we have seen.
+
+## The Module's Method Table and Initialization Function
+
+We would like to understand how `spam_system()` is called from Python programs. First, we need to list its name and address in a "method table":
+
+```cpp
+static PyMethodDef SpamMethods[] = {
+   ...
+   {"system", spam_system, METH_VARARGS,
+    "Execute a shell command."},
+    ...
+    {NULL, NULL, 0, NULL}  /* Sentinel */
+};
+```
+
+Note the third entry (`METH_VARARGS`). This is a flag telling the interpreter the calling convention to be used for the `C` function. It should normally always be `METH_VARARGS` or `METH_VARARGS | METH_KEYWORDS`; a value of `0` means that an obsolete variant of `PyArg_ParseTuple()` is used.
+
+When using only `METH_VARARGS`, the function should expect the Python-level parameters to be passed in as a tuple acceptable for passing via `PyArg_ParseTuple()`; more information on this function is provided below.
+
+The `METH_KEYWORDS` bit may be set in the third field if keyword arguments should be passed to the function. In this case, the `C` function should accept a third `PyObject *` parameter which will be a dictionary of keywords. Use `PyArg_ParseTupleAndKeywords()` to parse the arguments to such a function.
+
+The method table must be referenced in the module definition structure:
+
+```cpp
+static struct PyModuleDef spammodule = {
+   PyModuleDef_HEAD_INIT,
+   "spam",   /* name of the module */
+   spam_doc, /* module documentation, may be NULL */
+   -1,       /* size of per-interpreter state of the module,
+                or -1 if the mdodule keeps state in global variables. */
+   SpamMethods
+};
+```
+
+This structure, in turn, must be passed to the interpreter in the module's initialization function. The initialization function must be named `PyInit_name()`, where _name_ is the 
