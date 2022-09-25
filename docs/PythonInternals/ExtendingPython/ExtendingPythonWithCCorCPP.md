@@ -221,4 +221,61 @@ static struct PyModuleDef spammodule = {
 };
 ```
 
-This structure, in turn, must be passed to the interpreter in the module's initialization function. The initialization function must be named `PyInit_name()`, where _name_ is the 
+This structure, in turn, must be passed to the interpreter in the module's initialization function. The initialization function must be named `PyInit_name()`, where _name_ is the name of he module, and should be the only non-`static` item defined in the module file:
+
+```cpp
+PyMODINIT_FUNC
+PyInit_spam(void)
+{
+   return PyModule_Create(&spammodule);
+}
+```
+Note that `PyMODINIT_FUNC` declares the function as `PyObject *` return type, declares any speciallinkage declarations required by the platform, and for `C++` declares the function as `extern "C"`.
+
+When the Python program imports module `spam` for the first time, `PyInit_spam()` is called. It calls `PyModule_Create()`, which returns a module object, and inserts built-in function objects into the newly created module based upon the table (an array of `PyMethodDef` structures) found in the module definition.
+`PyModule_Create()` returns a pointer to the module object that it creates. It may abort with a fatal error for certain errors, or return `NULL` if the module could not be initialized satisfactorily. The init function must return the module object to its caller, so that it then gets inserted into `sys.modules`.
+
+When embedding Python, the `PyInit_spam()` function is not called automatically unless there's an entry in the `PyImport_Inittab` table. To add the module to the initialization table, use `PyImport_AppendInittab()`, optionally followed by an import of the module:
+
+```cpp
+int main(int argc, char *argv[])
+{
+   wchar_t *program = Py_DecodeLocale(argv[0], NULL);
+   if (program == NULL) {
+      fprintf(stderr, "Fatal error: cannot decode argv[0]\n");
+      exit(1);
+   }
+
+   /* Add a built-in module, before Py_Initialize */
+   if (PyImport_AppendInittab("spam", PyInit_spam) == -1) {
+       fptintf(stderr, "Error: could not extend in-built modules table\n");
+       exit(1);
+   }
+
+   /* Pass argv[0] to the Python interpreter */
+   Py_SetProgramName(program);
+
+   /* Initialize the Python interpreter. Required.
+      If this step fails, it will be a fatal error. */
+   Py_Initialize();
+
+  /* Optionally import the module; alternatively, import can be deferred until the 
+     embedded script imports it. */
+   PyObject *pmodule = PyImport_ImportModule("spam");
+   if (!pmodule) {
+      PyErr_Print();
+      fprintf(stderr, "Error: could not import module 'spam'\n");
+   }
+
+   ...
+
+   PyMem_RawFree(program);
+   return 0;
+}
+```
+
+_Note_: Removing entries from `sys.modules` or importing modules into multiple interpreters within a process (or following a `fork()` without an intervening `exec()`) can create problems for some extension modules. Extension module authors should exercise cuation when initializing internal data structures.
+
+A more substantial example module is included in the Python source distribution as [`Modules/xxmodule.c`](https://github.com/python/cpython/blob/main/Modules/xxmodule.c). This file may be sued as a template or simply read as an example.
+
+_Note_: Unlike this `spam` example, `xxmodule` uses _multi-phase initialization_ where a `PyModuleDef` structure is returned from `PyInit_spam`, and creation of the module is left to the import machinery. For details on multi-phase initialization see PEP-489
