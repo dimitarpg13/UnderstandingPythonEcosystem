@@ -80,5 +80,82 @@ Array lengths are represented in the Arrow metadata as a 64-bit signed integer. 
 
 The number of null count value slots is a property of the physical array and considered part of the data structure. The null count is represented in the Arrow metadata as a 64 bit signed integer, as it may be as large as the array length.
 
+### Validity bitmaps
+
+Any value in an array may be semantically null, whether primitive or nested type. 
+
+All array types, with the exception of union types utilize a dedicated memory buffer, known as the validity (or "null") bitmap to encode the nullness or non-nullness of each value slot. The validity bitmap must be large enough to have at least 1 bit for each array slot. 
+
+Whether any array slot is valid (non-null) is encoded in the respective bits of this bitmap. A 1 (set bit) for index `j` indicates that the value is not null, while a 0 (bit not set) indicates that it is null. Bitmaps are to be initialized to be all unset at allocation time (this includes padding):
+
+```
+is_valid[j] -> bitmap[j / 8] & (1 << (j % 8))
+```
+
+This spec uses least-significant bit (LSB) numbering. This means that within a group of 8 bits we read right-to-left:
+
+```
+values = [0, 1, null, 2, null, 3]
+
+bitmap
+j mod 8   7 6 5 4 3 2 1 0
+          0 0 1 0 1 0 1 1
+```
+
+Arrays having a 0 null count may choose to not allocate the validity bitmap; how this is represented depends on the implementation (for example, a C++ implementation may represent such an "absent" validity bitmap using a `NULL` pointer). Implementations may choose to always allocate a validity bitmap as a matter of convenience. Consumers of Arrow arrays should be ready to handle those two possibilities. 
+
+Nested type arrays (except for union types as noted above) have their own top-level validity bitmap and null count, regardless of the null count and valid bits of their child arrays. 
+
+Array slots which are null are not required to have a particular value; any "masked" memory can have any value and need not be zeroed, though implementations frequently choose to zero memory to null values.
+
+### Fixed-size Primitive Layout
+
+A primitive value array represents an array of values each having the same physical slot width typically measured in bytes, though the sepc also provides for bit-packed types (e.g. boolean values encoded in bits).
+
+Internally, the array contains a contiguous memory buffer whose total size is at least as large as the slot width multiplied by the array length. For bit packed types, the size is rounded up to the nearest byte.
+
+The associated validity bitmap is contiguously allocated (as described above) but does not need to be adjacent in memory to the values buffer. 
+
+#### Example Layout: Int32 Array
+
+For example a primitve array of int32s:
+
+```
+[1, null, 2, 4, 8]
+```
+would look like:
+
+```
+* Length: 5, Null count: 1
+* Validity bitmap buffer:
+
+|Byte 0 (validity bitmap)|  Bytes 1-63            |
+|------------------------|------------------------|
+| 00011101               |  0 (padding)           |
+
+* Value Buffer:
+
+|Bytes 0-3   |Bytes 4-7   |Bytes 8-11  |Bytes 12-15 |Bytes 16-19 |Bytes 20-63 |
+|------------|------------|------------|------------|------------|------------|
+| 1          |unspecified | 2          | 4          | 8          |unspecified |
+```
+
+#### Example Layout: Non-null int32 Array
+
+`[1, 2, 3, 4, 8]` has two possible layouts:
+
+```
+* Length: 5, Null count: 0
+* Validity bitmap buffer:
+|Byte 0 (validity bitmap) |Bytes 1-63                |
+|-------------------------|--------------------------|
+|00011111                 | 0 (padding)              |
+
+* Value buffer:
+|Bytes 0-3   |Bytes 4-7   |Bytes 8-11  |Bytes 12-15 |Bytes 16-19 |Bytes 20-63 |
+|------------|------------|------------|------------|------------|------------|
+| 1          | 2          | 3          | 4          | 8          |unspecified |
+```
+
 
 
