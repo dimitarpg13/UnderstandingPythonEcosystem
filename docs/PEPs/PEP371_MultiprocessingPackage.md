@@ -41,11 +41,21 @@ from processing import process as worker
 
 The code would now execute through the `processing.process` class. This type of compatibility means that with a minor (in most cases) change in code, the users apps will be able to leverage all cores and processors on a given machine for parallel execution. In many cases this package is even faster than the normal threading approach for I/O bound programs. This takes into account that this package is in optimized C code, while the threading module is not. 
 
-The "Distributed" Problem
+## The "Distributed" Problem
 
 The "distributed" problem is large and varied. The acceptance of this package does not preclude or recommend that programmers working on the "distributed" problem not examine other solutions for their problem domain. The intent of this package is to provide entry-level capabilities for local concurrency and the basic support to spread that concurrency across a network of machines - although the two are not tightly coupled, this could be used in conjuction with other distributed
 programming packages such as OpenMPI or grpc. 
 
 If necessary it is possible to completely decouple the local concurrency capabilities of the package from the networking/shared aspects fo the package. 
+
+## Performance Comparison
+
+The benchmarking code can be downloaded from All of the code for this can be downloaded from http://jessenoller.com/code/bench-src.tgz
+
+The basic method of execution of these benchmarks is the `run_benchmarks.py` script which is simply a wrapper to execute a target function through a single threaded (linear), multi-threaded (via threading) and multi-process (via pyprocessing) function for a static number of iterations with increasing numbers of execution loops and/or threads.
+
+The `run_benchmarks.py` script executes each function 100 times, picking the best run of that 100 iterations via the timeit module. 
+
+First, to idenitfy the overhead of the spawning of the workers, we execute a function which is simply a pass statement (empty):
 
 

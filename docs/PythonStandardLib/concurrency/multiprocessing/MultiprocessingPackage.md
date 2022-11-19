@@ -21,4 +21,28 @@ will print to standard output:
 [1, 4, 9]
 ```
 
+_Note_: `concurrent.futures.ProcessPoolExecutor` offers a higher level interface to push tasks to a background process without blocking execution of the calling process. Compared to using the `Pool` interface directly, the `concurrent.futures` API more readily allows the submission of work to the underlying process pool to be separated from waiting for the results. 
+
+## The `Process` class
+
+In `multiprocessing`, processes are spawned by creating a `Process` object and then calling its `start()` method. `Process` follows the API of `threading.Thread`. A trivial example of a multiprocess program is:
+
+```python
+from multiprocessing import Process
+
+def info(title):
+    print(title)
+    print('module name:', __name__)
+    print('parent process', os.getppid())
+    print('process id:', os.getpid())
+
+def f(name):
+    info('function f')
+    print('hello', name)
+
+if __name__ == '__main__':
+    info('main line')
+
+```
+
 
