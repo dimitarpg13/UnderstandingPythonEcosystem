@@ -307,7 +307,25 @@ Out ...:
 ```
 
 **Warning**:
+* Attribute access can be used only if the index element is a valid Python idenitifier e.g. `s.1` is not allowed.
+* The attribute will not be available if it conflicts with an existing method name e.g. `s.min` is not allowed, but `s['min']` is possible.
+* Similarly, the attribute will not be available if it conflicts with any of the following list: `index`, `major_axis`, `minor_axis`, `items`.
+* In any of these cases, standard indexing will still work e.g. `s['1']`, `s['min']` and `s['index']` will access the corresponding element or column.
 
+You can also assign a `dict` to a row of a `DataFrame`:
+```python
+In ...: x = pd.DataFrame({'x': [1, 2, 3], 'y': [3, 4, 5]})
+
+In ...: x.iloc[1] = {'x': 9, 'y': 99}
+
+In ...: x
+
+Out ...:
+   x   y
+0  1   3
+1  9  99
+2  3   5
+```
 
 
 
