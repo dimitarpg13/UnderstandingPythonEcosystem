@@ -208,7 +208,6 @@ Getting values from an object with multi-axes selection uses the following notat
 |Object Type |  Indexers                             |
 |------------|---------------------------------------|
 | Series     | `s.loc[indexer]`                      | 
-|            |                                       |
 | DataFrame  | `df.loc[row_indexer, column_indexer]` |
 
 ## Basics
