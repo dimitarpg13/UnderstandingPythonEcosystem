@@ -275,7 +275,22 @@ Out ...:
 ...
 Freq: D, Name: A, dtype: float64
 ```
+```python
+In ...: sa.a = 5
+In ...: sa
+Out ...:
+a    5
+b    2
+c    3
+dtype: int64
 
+In ...: dfa.A = list(range(len(dfa.index))) # ok if A already exists
+
+In ...: dfa
+Out ...:
+
+
+```
 
 
 
