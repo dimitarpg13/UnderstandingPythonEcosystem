@@ -257,6 +257,25 @@ df.lox[:, ['B', 'A']] = df[['A', 'B']].to_numpy()
 
 ## Attribute access
 
+You may access an index on a `Series` or column on a `DataFrame` directly as an attribute.
+
+```python
+In ...: sa = pd.Series([1, 2, 3], index=list('abc'))
+
+In ...: dfa = df.copy()
+
+In ...: sa.b
+Out ...: 2
+
+In ...: dfa.A
+Out ...: 
+2000-01-01    0.469112
+2000-01-02    1.212112
+2000-01-03   -0.861849
+...
+Freq: D, Name: A, dtype: float64
+```
+
 
 
 
