@@ -211,6 +211,52 @@ Getting values from an object with multi-axes selection uses the following notat
 |            |                                       |
 | DataFrame  | `df.loc[row_indexer, column_indexer]` |
 
+## Basics
+
+The primary function of indexing with `[]` (aka `__getitem__`) is selecting out lower-dimensional slices. The following table shows return type values when indexing pandas objects with `[]`:
+
+|Object Type    | Selection       |  Return Value Type                |
+|---------------|-----------------|-----------------------------------|
+| Series        |`series[label]`  | scalar value                      |
+| DataFrame     |`frame[colname]` | `Series` corresponding to colname |
+
+Here we construct a simple time series data set to use for illustrating the indexing functionality:
+
+```python
+In ...: dates = pd.date_range('1/1/2000', periods=8)
+
+In ...: df = pd.DataFrame(np.random.randn(8, 4),
+                          index=dates, columns=['A', 'B', 'C', 'D'])
+```
+Using the above code we show the most basic indexing using `[]`:
+
+```python
+In ...: s = df['A']
+In ...: s[dates[5]]
+```
+
+You can pass a list of columns to `[]` to select columns in that order. If a column is not contained in the DataFrame, an exception will be raised. Multiple columns can also be set in this manner:
+
+```python
+In ...: df[['B', 'A']] = df[['A', 'B']]
+```
+You may find this usefu for applying a transform (in-place) to a subset of the columns
+
+**Warning**: pandas aligns all AXES when setting `Series` and `DataFrame` from `.loc` and `.iloc`.
+This will **not** modify `df` because the column alignment is before value assignment.
+
+```python
+df.loc[:, ['B', 'A']] = df[['A', 'B']]
+```
+
+The correct way to swap column values is by using raw values:
+
+```python
+df.lox[:, ['B', 'A']] = df[['A', 'B']].to_numpy()
+```
+
+## Attribute access
+
 
 
 
