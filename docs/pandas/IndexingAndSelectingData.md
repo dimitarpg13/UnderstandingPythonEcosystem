@@ -189,5 +189,28 @@ Object selection has had a number of user-requested additions in order to suppor
 
 * `.loc` is primarily label based, but may also be used with a boolean array. `.loc` will raise `KeyError` when the items are not found. Allowed inputs are:
   > * a single label, e.g. `5` or `'a'` (Note that `5` is interpreted as a _label_ of the index. This use is **not** an integer position along the index)
+  > * a list of array of labels `['a', 'b', 'c']`
+  > * a slice object with labels `'a':'f'` (Note that contrary to usual Python slices, **both** the start and the stop are included, when present in the index.)
+  > * a boolean array (any `NA` values will be treated as `False`)
+  > * a `callable` function with one argument (the calling Series or DataFrame) and that returns valid output for indexing (one of the above).
+
+* `.iloc` is primarily integer position based (from `0` to `length-1` of the axis), but may also be used with a boolean array. `.iloc` will raise `IndexError` if a requested indexer is out-of-bounds, except _slice_ indexers which allow out-of-bounds indexing. Allowed inputs are:
+  > * an integer e.g. `5`
+  > * a list or array of integers `[4, 3, 0]`
+  > * a slice object with `int`'s `1:7`
+  > * a boolean array (any `NA` values will be treated as `False`)
+  > * a `callable` function with one argument (the calling Series or DataFrame) and that returns valid output for indexing 
+
+* `.loc`, `.iloc`, and also `[]` indexing can accept a `callable` as indexer. 
+
+Getting values from an object with multi-axes selection uses the following notation (using `.loc` as an example, but the following applies to `.iloc` as well). Any of the axes accessors may be the null slice `:`. Axes left out of the specification are assumed to be `:`, e.g. `p.loc['a']` is equivalent to `p.loc['a', :]`.
+
+|Object Type |  Indexers                             |
+|------------|---------------------------------------|
+| Series     | `s.loc[indexer]`                      | 
+|            |                                       |
+| DataFrame  | `df.loc[row_indexer, column_indexer]` |
+
+
 
 
