@@ -421,6 +421,13 @@ Out ...:
 
 ## Selection by label
 
+> **Warning:**
+> Weather a copy or a reference is returned for a setting operation, may depend on the context. This is the mentioned before `chained assignment` and it should be avoided.
+
+> **Warning:**
+> `.loc` is strict when you present slicers that are not compatible (or convertible) with the index type. For example using integers in a `DatetimeIndex`. These will raise a `TypeError`. 
+
+
 
 ## Selection by position
 
