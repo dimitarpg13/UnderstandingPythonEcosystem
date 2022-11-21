@@ -426,7 +426,22 @@ Out ...:
 
 > **Warning:**
 > `.loc` is strict when you present slicers that are not compatible (or convertible) with the index type. For example using integers in a `DatetimeIndex`. These will raise a `TypeError`. 
-
+> ```python
+> In ...: dfl = pd.DataFrame(np.random.randn(5, 4),
+>                            columns=list('ABCD'),
+>                            index=pd.date_range('20130101', periods=5))
+>
+> In ...: dfl
+> Out ...:
+>
+>                    A         B         C         D
+> 2013-01-01  1.075770 -0.109050  1.643563 -1.469388
+> 2013-01-02  0.357021 -0.674600 -1.776904 -0.968914
+> 2013-01-03 -1.294524  0.413738  0.276662 -0.472035
+> 2013-01-04 -0.013960 -0.362543 -0.006154 -0.923061
+> 2013-01-05  0.895717  0.805244 -1.206412  2.565646
+>
+> ```
 
 
 ## Selection by position
