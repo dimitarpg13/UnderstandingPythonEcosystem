@@ -326,6 +326,102 @@ Out ...:
 1  9  99
 2  3   5
 ```
+Attribute access can be used to modify an existing element of a Series or column of a DataFrame. However if Attribute Access is used to create a new column, it creates a new attribute rather than a new column. In pandas `0.21.0` and later this will raise a `UserWarning`:
 
+```python
+In ...: df = pd.DataFrame({'one': [1., 2., 3.]})
+In ...: df.two = [4, 5, 6]
+UserWarning: Pandas doesn't allow Series to be assigned into nonexistent columns
+In ...: df
+Out ...:
+   one
+0  1.0
+1  2.0
+2  3.0
+```
+
+## Slicing ranges
+
+The most robust and consistent way of slicing ranges along arbitrary axes is described in the section [Selection by position](#selection-by-position) detailing the `.iloc` method. Here we discuss the semantics of slicing  using the `[]` operator.
+
+With Series, the syntax works exactly as with an ndarray, returning a slice of the values and the corresponding labels:
+
+```python
+In ...: s[:5]
+Out ...:
+2000-01-01    0.469112
+2000-01-02    1.212112
+2000-01-03   -0.861849
+2000-01-04    0.721555
+2000-01-05   -0.424972
+Freq: D, Name: A, dtype: float64
+
+In ...: s[::2]
+Out ...:
+2000-01-01    0.469112
+2000-01-03   -0.861849
+2000-01-05   -0.424972
+2000-01-07    0.404705
+Freq: 2D, Name: A, dtype: float64
+
+In ...: s[::-1]
+Out ...:
+2000-01-08   -0.370647
+2000-01-07    0.404705
+2000-01-06   -0.673690
+2000-01-05   -0.424972
+2000-01-04    0.721555
+2000-01-03   -0.861849
+2000-01-02    1.212112
+2000-01-01    0.469112
+Freq: -1D, Name: A, dtype: float64
+```
+
+Note that setting works as well:
+
+```python
+In ...: s2 = s.copy()
+In ...: s2[:5] = 0
+
+In ...: s2
+Out ...:
+2000-01-01    0.000000
+2000-01-02    0.000000
+2000-01-03    0.000000
+2000-01-04    0.000000
+2000-01-05    0.000000
+2000-01-06   -0.673690
+2000-01-07    0.404705
+2000-01-08   -0.370647
+Freq: D, Name: A, dtype: float64
+```
+
+With DataFrame, slicing inside of `[]` *slices the rows*. This is provided largely as a convenience since it is such a common operation.
+
+```python
+In ...: df[:3]
+Out ...:
+                   A         B         C         D
+2000-01-01  0.469112 -0.282863 -1.509059 -1.135632
+2000-01-02  1.212112 -0.173215  0.119209 -1.044236
+2000-01-03 -0.861849 -2.104569 -0.494929  1.071804
+
+In ...: df[::-1]
+Out ...:
+                   A         B         C         D
+2000-01-08 -0.370647 -1.157892 -1.344312  0.844885
+2000-01-07  0.404705  0.577046 -1.715002 -1.039268
+2000-01-06 -0.673690  0.113648 -1.478427  0.524988
+2000-01-05 -0.424972  0.567020  0.276232 -1.087401
+2000-01-04  0.721555 -0.706771 -1.039575  0.271860
+2000-01-03 -0.861849 -2.104569 -0.494929  1.071804
+2000-01-02  1.212112 -0.173215  0.119209 -1.044236
+2000-01-01  0.469112 -0.282863 -1.509059 -1.135632
+```
+
+## Selection by label
+
+
+## Selection by position
 
 
