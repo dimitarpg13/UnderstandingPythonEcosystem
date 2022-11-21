@@ -444,6 +444,16 @@ Out ...:
 > In ...: dfl.loc[2:3]
 > TypeError: cannot do slice indexing on <class 'pandas.tseries.index.DatetimeIndex'> with these indexers [2] of <type 'int'>
 > ```
+> String likes in slicing can be convertible to the type of the index and lead to natural slicing.
+> ```python
+> In ...: dfl.loc['20130102':'20130104']
+> Out ...:
+>                    A         B         C         D
+> 2013-01-02  0.357021 -0.674600 -1.776904 -0.968914
+> 2013-01-03 -1.294524  0.413738  0.276662 -0.472035
+> 2013-01-04 -0.013960 -0.362543 -0.006154 -0.923061
+> ```
+
 
 
 ## Selection by position
