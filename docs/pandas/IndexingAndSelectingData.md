@@ -441,6 +441,8 @@ Out ...:
 > 2013-01-04 -0.013960 -0.362543 -0.006154 -0.923061
 > 2013-01-05  0.895717  0.805244 -1.206412  2.565646
 >
+> In ...: dfl.loc[2:3]
+> TypeError: cannot do slice indexing on <class 'pandas.tseries.index.DatetimeIndex'> with these indexers [2] of <type 'int'>
 > ```
 
 
