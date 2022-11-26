@@ -596,6 +596,75 @@ In...: x = list('abcdef')
 In...: x
 Out...: ['a', 'b', 'c', 'd', 'e', 'f']
 
+In...: x[4:10]
+Out...: ['e', 'f']
 
+In...: x[8:10]
+Out...: []
+
+In...: s = pd.Series[x]
+
+In...: s
+Out...:
+0    a
+1    b
+2    c
+3    d
+4    e
+5    f
+dtype: object
+
+In...: s.iloc[4:10]
+Out...:
+4    e
+5    f
+dtype: object
+
+In...: s.iloc[8:10]
+Out...: Series([], dtype: object)
 ```
+Note that using slices that go out of bounds can result in an empty axis (e.g. an empty DataFrame being returned).
+```python
+In...: dfl = pd.DataFrame(np.random.randn(5, 2), columns=list('AB'))
+In...: dfl
+Out...:
+          A         B
+0 -0.082240 -2.182937
+1  0.380396  0.084844
+2  0.432390  1.519970
+3 -0.493662  0.600178
+4  0.274230  0.132885
+
+In...: dfl.iloc[:, 2:3]
+Out...:
+Empty DataFrame
+Columns: []
+Index: [0, 1, 2, 3, 4]
+
+In...: dfl.iloc[:, 1:3]
+Out:
+          B
+0 -2.182937
+1  0.084844
+2  1.519970
+3  0.600178
+4  0.132885
+
+In...: dfl.iloc[4:6]
+Out...:
+         A         B
+4  0.27423  0.132885
+```
+A single indexer that is out of bounds will raise an `IndexError`. A list of indexers where any element is out of bounds will raise an `IndexError`.
+```python
+>>> dfl.iloc[[4,5,6]]
+__IndexError: positional indexers are out-of-bounds__
+
+>>> dfl.iloc[:, 4]
+__IndexError: single positional indexer is out-of-bounds__
+```
+
+## Selection by callable
+
+
 
