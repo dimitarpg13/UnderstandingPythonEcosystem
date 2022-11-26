@@ -454,8 +454,148 @@ Out ...:
 > 2013-01-04 -0.013960 -0.362543 -0.006154 -0.923061
 > ```
 
+> **Warning**
+> _Changed in version 1.0.0_
+> pandas will raise `KeyError` if indexing with a list with missing labels. 
 
 
 ## Selection by position
 
+> **Warning**
+> Whether a copy or a reference is returned for a setting operation, may depend on the context. This is sometimes called __chained assignment__ and it should be avoided.
+
+pandas provides a suite of methods in order to get **purely integer based indexing**. The semantics follow closely Python and NumPy slicing. These are `0-based` indexing. When slicing, the start bound is __included__, while the upper bound is __excluded__. Trying to use a non-integer, even a **valid** label will raise `IndexError`.
+
+The `.iloc` attribute is the primary access method. The following are valid inputs:
+
+* an integer e.g. `5`
+* a list of array of integers `[4, 3, 0]`
+* a slice object with ints `1:7`
+* a boolean array
+* a `callable`
+
+```python
+In ...: s1 = pd.Series(np.random.randn(5), index=list(range(0, 10, 2)))
+
+In ...: s1
+Out ...:
+0    0.695775
+2    0.341734
+4    0.959726
+6   -1.110336
+8   -0.619976
+dtype: float64
+
+In ...: s1.iloc[:3]
+Out ...:
+0    0.695775
+2    0.341734
+4    0.959726
+dtype: float64
+
+In ...: s1.iloc[3]
+Out ...: -1.110336102891167
+```
+
+Note that setting works as well:
+
+```python
+In ...: s1.iloc[:3] = 0
+
+In ...: s1
+Out ...:
+0    0.000000
+2    0.000000
+4    0.000000
+6   -1.110336
+8   -0.619976
+dtype: float64
+```
+
+With a DataFrame:
+```python
+In ...: df1 = pd.DataFrame(np.random.randn(6, 4),
+                           index=list(range(0, 12, 2)),
+                           columns=list(range(0, 8, 2)))
+In ...: df1
+Out ...:
+           0         2         4         6
+0   0.149748 -0.732339  0.687738  0.176444
+2   0.403310 -0.154951  0.301624 -2.179861
+4  -1.369849 -0.954208  1.462696 -1.743161
+6  -0.826591 -0.345352  1.314232  0.690579
+8   0.995761  2.396780  0.014871  3.357427
+10 -0.317441 -1.236269  0.896171 -0.487602
+```
+Selected via integer slicing:
+```python
+In ...: df1.iloc[:3]
+Out...:
+          0         2         4         6
+0  0.149748 -0.732339  0.687738  0.176444
+2  0.403310 -0.154951  0.301624 -2.179861
+4 -1.369849 -0.954208  1.462696 -1.743161
+
+In ...: df1.iloc[1:5, 2:4]
+Out ...:
+          4         6
+2  0.301624 -2.179861
+4  1.462696 -1.743161
+6  1.314232  0.690579
+8  0.014871  3.357427
+```
+Select via integer list:
+```python
+In ...: df1.iloc[[1,3, 5], [1, 3]]
+Out ...:
+           2         6
+2  -0.154951 -2.179861
+6  -0.345352  0.690579
+10 -1.236269 -0.487602
+```
+
+```python
+In ...: df1.iloc[1:3, :]
+Out ...:
+          0         2         4         6
+2  0.403310 -0.154951  0.301624 -2.179861
+4 -1.369849 -0.954208  1.462696 -1.743161
+```
+```python
+In...: df1.iloc[:, 1:3]
+Out...:
+           2         4
+0  -0.732339  0.687738
+2  -0.154951  0.301624
+4  -0.954208  1.462696
+6  -0.345352  1.314232
+8   2.396780  0.014871
+10 -1.236269  0.896171
+```
+
+```python
+# this is also equivalent to `df.iat[1,1]`
+In...: df1.iloc[1, 1]
+Out...: -0.1549507744249032
+```
+For getting a cross section using an integer position (equiv to `df.xs(1)`):
+```python
+In...: df1.iloc[1]
+Out...:
+0    0.403310
+2   -0.154951
+4    0.301624
+6   -2.179861
+Name: 2, dtype: float64
+```
+Out of range slice indexes are handled gracefully just as in Python/NumPy
+```python
+# these are allowed in Python/NumPy
+In...: x = list('abcdef')
+
+In...: x
+Out...: ['a', 'b', 'c', 'd', 'e', 'f']
+
+
+```
 
