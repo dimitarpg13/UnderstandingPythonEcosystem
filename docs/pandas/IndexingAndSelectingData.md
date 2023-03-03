@@ -658,13 +658,17 @@ Out...:
 A single indexer that is out of bounds will raise an `IndexError`. A list of indexers where any element is out of bounds will raise an `IndexError`.
 ```python
 >>> dfl.iloc[[4,5,6]]
-__IndexError: positional indexers are out-of-bounds__
+IndexError: positional indexers are out-of-bounds
 
 >>> dfl.iloc[:, 4]
-__IndexError: single positional indexer is out-of-bounds__
+IndexError: single positional indexer is out-of-bounds
 ```
 
 ## Selection by callable
 
+`.loc`, `.iloc`, and also `[]` indexing can accept a `callable` as indexer. The `callable` must be a function with one argument (the calling Series or DataFrame) that returns valid output for indexing.
 
+```python
+
+```
 
