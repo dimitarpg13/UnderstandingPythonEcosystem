@@ -82,4 +82,50 @@ tfplist: tfpdef (',' tfpdef)* [',']
 
 ### Lambda
 
-`lambda`'s syntax does not support annotations. '
+`lambda`'s syntax does not support annotations. The syntax of `lambda` could be changed to support annotations, by requiring parentheses around the parameter list. However, it was decided not to make this change because:
+
+1. it would be an incompatible change
+2. Lambdas are neuered anyway
+3. The lambda can always be changed to a function.
+
+## Accessing Function Annotations
+
+Once compiled, a function's annotations are available via the function's `__annotations__` attribute. This attribute is a mutable dictionary, mapping parameter names to an object representing the evaluated annotation expression.
+
+There is a special key in the `__annotations__` mapping, `"return"`. This key is present only if an annotation was supplied for the function's return value.
+
+For example, the following annotation:
+
+```python
+def foo(a: 'x', b: 5 + 6, c: list) -> max(2, 9):
+    ...
+```
+
+would result in an `__annotations__` mapping of
+
+```python
+{'a': 'x',
+ 'b': 11,
+ 'c': list,
+ 'return': 9}
+```
+
+The `return` key was chosen because it cannot conflict with the name of a parameter; any attempt to use `return` as a parameter name would result in a `SyntaxError`.
+
+`__annotations__` is an empty, mutable dictionary if there are no annotations on the function or if the functions was created from a `lambda` expression.
+
+### Use Cases
+
+In the course of discussing annotations, a number of use-cases have been raised. Some of these are presented here, grouped by what kind of information they convey. Also included are examples of existing products and packages that could make use of annotations.
+
+* Providing typing information
+  ** Type checking 
+  ** Let IDEs show what types a function expects and returns
+  ** Function overloading / generic functions
+  ** Foreign-language bridges
+  ** Adaptation
+  ** Predicate logic functions
+  ** Database query mapping
+  ** RPC paramter marshaling
+* Other information
+  ** Documentation for parameters and return values
