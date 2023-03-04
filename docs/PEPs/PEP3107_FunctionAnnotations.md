@@ -24,3 +24,27 @@ Another library might be used to provide typechecking for Python functions and m
 def haul(item: Haulablem *vargs: PackAnimal) -> Distance:
     ...
 ```
+However, neither the strings in the first example nor the type information in the second example have any meaning on their own; meaning comes from third party libraries alone.
+
+3. Following from point 2, this PEP makes no attempt to introduce any kind of standard semantics, even for the built-in types. This work will be left to third party libraries.
+
+## Syntax
+
+### Parameters
+
+Annotations for parameters take the form of optional expressions that follow the parameter name:
+
+```python
+def foo(a: expression, b: expression = 5):
+    ...
+```
+
+In pseudo-grammar, parameters now look like `indentifier [: expression] [= expression]`. That is, annotations always precede a parameter's default value and both annotations adand default values are optional. Just like how equal signs are used to indicate a default value, colons are used to mark annotations. All nnotation expressions are evaluated when the function definition is executed, just like default values.
+
+Annotations for excess parameters (i.e. `*args` and `**kwargs`) are indicated similarly:
+
+```python
+def foo(*args: expression, **kwargs: expression):
+```
+
+
