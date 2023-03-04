@@ -80,6 +80,6 @@ tfpdef: tname | '(' tfplist ')'
 tfplist: tfpdef (',' tfpdef)* [',']
 ```
 
-###Lambda
+### Lambda
 
 `lambda`'s syntax does not support annotations. '
