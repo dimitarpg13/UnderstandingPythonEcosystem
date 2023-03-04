@@ -47,4 +47,39 @@ Annotations for excess parameters (i.e. `*args` and `**kwargs`) are indicated si
 def foo(*args: expression, **kwargs: expression):
 ```
 
+Annotations for nested parameters always follow the name of the parameter, not the last parenthesis. Annotating all parameters of a nested parameter is not required:
 
+```python
+def foo((x1, y1: expression),
+        (x2: expression, y2: expression)=(None, None)):
+    ...
+```
+
+### Return Values
+
+The examples thus far have omitted examples of how to annotate the type of a function's return value. This is done like so:
+
+```python
+def sum() -> expression:
+    ...
+```
+
+That is, the parameter list can now be followed by a literal `->` and a Python expression. Like the annotations for parameters, this expression will be evaluated when the function definition is executed. The grammar for function definitions is now:
+
+```python
+decorator: '@' dotted_name [ '(' [arglist] ')' ] NEWLINE
+decorators: decorator+
+funcdef: [decorators] 'def' NAME parameters ['->' test] ':' suite
+parameters: '(' [typedargslist] ')'
+typedargslist: ((tfpdef ['=' test] ',')*
+                ('*' [tname] (',' tname ['=' test])* [',' '**' tname]
+                 | '**' tname)
+                | tfpdef ['=' test] (',' tfpdef ['=' test])* [','])
+tname: NAME [':' test]
+tfpdef: tname | '(' tfplist ')'
+tfplist: tfpdef (',' tfpdef)* [',']
+```
+
+###Lambda
+
+`lambda`'s syntax does not support annotations. '
