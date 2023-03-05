@@ -91,5 +91,42 @@ A Parameter object has the following public attributes and methods:
     * `Parameter.POSITIONAL_ONLY` - value must be supplied as a positional argument.
     Python has no explicit syntax for defining positional-only parameters, but many built-in and extension module functions (especially those that accept only one or two parameters) accept them.
     * `Parameter.POSITIONAL_OR_KEYWORD` - value may be supplied as either a keyword or positional argument (this is the standard binding behavior for functions implemented in Python)
-    *
+    * `Parameter.KEYWORD_ONLY` - value must be supplied as a keyword argument. Keyword only parameters are those which appear after a "*" or "*args" entry in a Python function definition.
+    * `Parameter.VAR_POSITIONAL` - a tuple of positional arguments that aren't bound to any other parameter. This corresponds to a "**kwargs" parameter in a Python function definition.
+    Always use `Parameter.*` constants for setting and checking value of the `kind` attribute.
+
+* __replace(*,name=<optional>,kind=<optional>,default=<optional>,annotation=<optional>)__ -> __Parameter__
+    Creates a new Parameter instance based on the instance `replaced` was invoked on. To override a Parameter attribute, pass the corresponding argument. To remove from a `Parameter`, pass `Parameter.empty`.
+
+Parameter constructor:
+
+* __Parameter(name,kind,*,annotation=Parameter.empty,default=Parameter.empty)__
+    Instantiates a Parameter object. `name` and `kind` are required, while `annotation` and `default` are optional.
+
+Two parameters are equal when they have equal names, kinds, defaults, and annotations.
+
+Parameter objects are immutable. Instead of midofying a Parameter object, you can use `Parameter.replace()` to create a modified copy like so:
+
+```python
+>>> param = Parameter('foo', Parameter.KEYWORD_ONLY, default=42)
+>>> str(param)
+'foo=42'
+
+>>> str(param.replace())
+'foo=42'
+
+>>> str(param.replace(default=Parameter.empty, annotation='spam'))
+"foo:'spam'"
+```
+
+## BoundArguments Object
+
+Result of a `Signature.bind` call. Holds the mapping of arguments to the function's parameters.
+Has the following public attributes:
+
+* __arguments__ : __OrderedDict__
+    An ordered, mutable mapping of parameters' names to arguments' values. Contains only explicitly bound arguments. Arguments for which `bind()` relied on a default value are skipped.
+
+* __args__ : __tuple__
+    Tuple of positional arguments values. 
 
