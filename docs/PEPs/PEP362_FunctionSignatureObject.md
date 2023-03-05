@@ -24,4 +24,51 @@ A Signature object has the following public attributes and methods:
     Creates a mapping from positional and keyword arguments to parameters. Raises a `TypeError` if the passed arguments do not match the signature.
 
 * __bind_partial(*args, **kwargs)__ -> __BoundArguments__
+    Work in the same way as `bind()`, but allows the omission of some required arguments (mimics `functools.partial` behavior). Raises a `TypeError` if the passed arguments do not match the signature.
+
+* __replace(parameters=<optional>,*,return_annotation=<optional>)__ -> __Signature__
+    Creates a new Signature instance based on the instance `replace` was invoked on. It is possible to pass different `parameters` and/or `return_annotation` to override the corresponding properties of the base signature. To remove `return_annotation` from the copied `Signature`, pass in `Signature.empty`.
+
+    Note that the `'=<optional>'` notation, means that the argument is optional. This notation applies to the rest of this PEP.
+
+Signature objects are immutable. Use `Signature.replace()` to make a modified copy:
+
+```python
+>>> def foo() -> None:
+...     pass
+>>> sig = signature(foo)
+
+>>> new_sig = sig.replace(return_annotation="new return annotation")
+>>> new_sig is not sig
+_True_
+>>> new_sig.return_annotation != sig.return_annotation
+_True_
+>>> new_sig.parameters == sig.parameters
+_True_
+
+>>> new_sig = new_sig.replace(return_annotation=new_sig.empty)
+>>> new_sig.return_annotation is Signature.empty
+_True_
+```
+
+There are two ways to instantiate a Signature class:
+
+* __Signature(parameters=<optional>,*,return_annotation=Signature.empty)__
+    Default Signature constructor. Accepts an optional sequence of `Parameter` objects, and an optional `return_annotation`. Parameters sequence is validated to check that there are no parameters with duplicate names, and that the parameters are in the right order, i.e. positional =-only first, then positional-or-keyword, etc.
+
+* __Signature.from_function(function)__
+    Returns a Signature object reflecting the signature of the function passed in.
+
+It's possible to test Signatures for equality. Two signatures are equal when their parameters are equal, their positional and positional-only parameters appear in the same order, and they have equal return annotations.
+
+Changes to the Signature object, or to any of its data members, do not affect the function itself. 
+Signature also implements `__str__`:
+
+```python
+>>> str(Signature.from_function((lambda *args: None)))
+_'(*args)'_
+
+>>> str(Signature())
+_'()'_
+```
 
