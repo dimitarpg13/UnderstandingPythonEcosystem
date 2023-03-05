@@ -72,3 +72,24 @@ Signature also implements `__str__`:
 '()'
 ```
 
+## Parameter Object
+
+Python's expressive syntax means functions can accept many different kinds of parameters with many subtle semantic differences. We propose a rich Parameter object designed to represent any possible function parameter.
+A Parameter object has the following public attributes and methods:
+
+* __name__ : __str__
+    The name of the parameter as a string. Must be a valid python identifier name (with the exception of `POSITIONAL_ONLY` parameters, which can have it set to `None`)
+
+* __default__ : __object__
+    The default value for the parameter. If the parameter has no default value, this attribute is set `Parameter.empty`.
+
+* __annotation__ : __object__
+    The annotation for the parameter. If the parameter has no annotation, this attribute is set to `Parameter.empty`.
+
+* __kind__
+    Describes how argument values are bound to the parameter. Possible values:
+    ** `Parameter.POSITIONAL_ONLY` - value must be supplied as a positional argument.
+    Python has no explicit syntax for defining positional-only parameters, but many built-in and extension module functions (especially those that accept only one or two parameters) accept them.
+    ** `Parameter.POSITIONAL_OR_KEYWORD` - value may be supplied as either a keyword or positional argument (this is the standard binding behavior for functions implemented in Python)
+    **
+
