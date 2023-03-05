@@ -20,8 +20,8 @@ A Signature object has the following public attributes and methods:
 * **parameters** : **OrderedDict**
     An ordered mapping of parameters' names to the corresponding Parameter objects
 
-* **bind(*args, **kwargs)** -> **BoundArguments**
+* __bind(*args, **kwargs)__ -> __BoundArguments__
     Creates a mapping from positional and keyword arguments to parameters. Raises a `TypeError` if the passed arguments do not match the signature.
 
-* **bind_partial(*args, **kwargs)** -> **BoundArguments**
+* __bind_partial(*args, **kwargs)__ -> __BoundArguments__
 
