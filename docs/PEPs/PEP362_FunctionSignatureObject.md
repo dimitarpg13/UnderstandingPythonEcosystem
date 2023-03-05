@@ -88,8 +88,8 @@ A Parameter object has the following public attributes and methods:
 
 * __kind__
     Describes how argument values are bound to the parameter. Possible values:
-    ** `Parameter.POSITIONAL_ONLY` - value must be supplied as a positional argument.
+    * `Parameter.POSITIONAL_ONLY` - value must be supplied as a positional argument.
     Python has no explicit syntax for defining positional-only parameters, but many built-in and extension module functions (especially those that accept only one or two parameters) accept them.
-    ** `Parameter.POSITIONAL_OR_KEYWORD` - value may be supplied as either a keyword or positional argument (this is the standard binding behavior for functions implemented in Python)
-    **
+    * `Parameter.POSITIONAL_OR_KEYWORD` - value may be supplied as either a keyword or positional argument (this is the standard binding behavior for functions implemented in Python)
+    *
 
