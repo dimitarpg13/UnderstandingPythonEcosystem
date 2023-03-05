@@ -40,15 +40,15 @@ Signature objects are immutable. Use `Signature.replace()` to make a modified co
 
 >>> new_sig = sig.replace(return_annotation="new return annotation")
 >>> new_sig is not sig
-_True_
+True
 >>> new_sig.return_annotation != sig.return_annotation
-_True_
+True
 >>> new_sig.parameters == sig.parameters
-_True_
+True
 
 >>> new_sig = new_sig.replace(return_annotation=new_sig.empty)
 >>> new_sig.return_annotation is Signature.empty
-_True_
+True
 ```
 
 There are two ways to instantiate a Signature class:
@@ -66,9 +66,9 @@ Signature also implements `__str__`:
 
 ```python
 >>> str(Signature.from_function((lambda *args: None)))
-_'(*args)'_
+'(*args)'
 
 >>> str(Signature())
-_'()'_
+'()'
 ```
 
