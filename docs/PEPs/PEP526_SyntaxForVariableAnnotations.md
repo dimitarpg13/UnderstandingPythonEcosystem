@@ -2,6 +2,6 @@
 
 ## Abstract 
 
-`PEP 484` introduced type hints a.k.a. type annotations. While its main focus was function annotations, it also introduced the notion of type comments to annotate variables:
+[PEP 484]() introduced type hints a.k.a. type annotations. While its main focus was function annotations, it also introduced the notion of type comments to annotate variables:
 
 
