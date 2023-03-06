@@ -18,5 +18,7 @@ those tools are not yet as mature.)
 
 The proposal is strongly inspired by [mypy](https://mypy-lang.org/). For example, the type "sequence of integers" can be written as `Sequence[int]`. The square brackets mean that no new syntax needs to be added to the language The example here uses a custom type `Sequence`, imported from a pure-Python module `typing`. The `Sequence[int]` notation works at runtime by implementing `__getitem__()` in the metaclass (but its significance is primarily to an offline type checker).
 
+The type system supports unions, generic types, and a special type named `Any` which is consistent with (i.e. assignable to and from) all types. This latter feature is taken from the idea of gradual typing. Gradual typing and the full type system are explained in [PEP 483](PEP483_TheTheoryOfTypeHints.md).
 
+Other approaches from which we have borrowed or to which ours can be compared and contrasted are described in [PEP 482]().
 
