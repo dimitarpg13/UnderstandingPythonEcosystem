@@ -40,4 +40,85 @@ At the present time, this is necessarily implementation-defined by the server or
 
 ## Specification Overview
 
-The WSGI interface has two sides: the "server" or "gateway" side, and the "application" or "framework" side. 
+The WSGI interface has two sides: the "server" or "gateway" side, and the "application" or "framework" side. The server side invokes a callable object that is provided by the application side. The specifics of how that object is provided are up to the server or gateway. It is assumed that some servers or gateways will require an application's deployer to write a short script to create an instance of the server or gateway, and supply it with the application object. Other servers and gateways may use configuration files or other mechanisms to specify where an application object should be imported from, or otherwise obtained.
+
+In addition to "pure" servers/gateways and applications/frameworks, it is also possible to create "middleware" components that implement both sides of this specification. Such components act as an application to their containing server, and as a server to a contained application, and can be used to provide extended APIs, content transformation, navigation, and other useful functions.
+
+Throughout this specification, we will use the term "a callable" to mean "a function, method, class, or an instance with a `__call__` method". It is up to the server, gateway, or application implementing the callable to choose the appropriate implementation technique for their needs. Conversely, a server, gateway, or application that is invoking a callable __must not__ have any dependency on what kind of callable was provided to it. Callables are only to be called, not introspected upon.
+
+### The Application/Framework Side
+
+The application object is simply callable object that accepts two arguments. The term "object" should not be misconstrued as requiring an actual object instance: a function, method, class, or isntance with a `__call__` method are all acceptable for use as an application object. Application objects must be able to be invoked more than once, as virtually all servers/gateways (other than CGI) will make such repeated requests.
+
+(Note: although we refer to it as an "application" object, this should not be construed to mean that application developers will use WSGI as a web programming API! It is assumed that application developers will continue to use existing, high-level framework services to develop their applications. WSGI is a tool for framework and server developers, and is not intended to directly support application developers.)
+
+Here are two example application objects; one is a function, and the other is a class:
+
+```python
+def simple_app(environ, start_response):
+    """Simplest possible application object"""
+    status = '200 OK'
+    response_headers = [('Content-type', 'text/plain')]
+    start_response(status, response_headers)
+    return ['Hello world!\n']
+
+class AppClass:
+    """produce the same output, but using a class
+    
+    (Note: 'AppClass' is the 'Application' here, so calling it 
+    returns an instance of 'AppClass', which is then the iterable
+    return value of the "application callable" as required by
+    the spec.
+
+    If we wanted to use *instances* of 'AppClass' as application 
+    objects instead, we would have to implement a '__call__' 
+    method, which would be invoked to execute the application,
+    and we would need to create an instance for use by the
+    server or gateway.)
+    """
+    def __init__(self, environ, start_response):
+        self.environ = environ
+        self.start = start_response
+
+    def __iter__(self):
+        status = '200 OK'
+        response_headers = [('Content-type', 'text/plain')]
+        self.start(status, response_headers)
+        yield "Hello world!\n"
+```
+
+### The Server/Gateway Side
+
+The server or gateway invokes the application callable once for each request it receives from an HTTP client, that is directed at the application. To illustrate, here is a simple CGI gateway, implemented as a function taking an application object. Note that this simple example has limited error handling, because by default an uncaught exception will be dumped to `sys.stderr` and logged by the web server.
+
+```python
+import os, sys
+
+def run_with_cgi(application):
+
+    environ = dict(os.environ.items())
+    environ['wsgi.input'] = sys.stdin
+    environ['wsgi.errors'] = sys.stderr
+    environ['wsgi.version'] = (1, 0)
+    environ['wsgi.multithread'] = False
+    environ['wsgi.multiprocess'] = True
+    environ['wsgi.run_once'] = True
+
+    if environ.get('HTTPS', 'off') in ('on', '1'):
+        environ['wsgi.url_scheme'] = 'https'
+    else:
+        environ['wsgi.url_scheme'] = 'http'
+
+    headers_set = []
+    headers_sent = []
+
+def write(data):
+    if not headers_set:
+        raise AssertionError("write() before start_response()")
+
+    elif not headers_sent:
+        # Before the first output, send the stored headers
+        status, response_headers = headers_sent[:] = headers_set
+
+```
+
