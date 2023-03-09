@@ -2,7 +2,7 @@
 
 deep immersion into the Python ecosystem:
 
-* Python design and architecture, internals and debugging, source code discussion
+* Python design and architecture, PEP documents discussion, internals and debugging, source code discussion
 
 * NumPy architecture and source code discussion
 
