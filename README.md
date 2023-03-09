@@ -1,6 +1,6 @@
 # Understanding Python Ecosystem
 
-deep immersion into the Python ecosystem:
+deep immersion into the Python ecosystem (work in progress):
 
 * Python design and architecture, PEP documents discussion, internals and debugging, source code discussion
 
