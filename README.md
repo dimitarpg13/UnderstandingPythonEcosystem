@@ -1,4 +1,5 @@
-# UnderstandingPandasAndNumpySourceCode
+# Understanding Python Ecosystem
+
 deep immersion into the Python ecosystem:
 
 * Python design and architecture, internals and debugging, source code discussion
