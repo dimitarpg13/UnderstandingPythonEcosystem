@@ -8,6 +8,6 @@ deep immersion into the Python ecosystem:
 
 * Pandas design, internals operation and source code discussion
 
-* Flatbuffers design and Python interoperability
+* Flatbuffers architecture and Python interoperability
 
 * Arrow design and specification, discussion on Python interoperability
