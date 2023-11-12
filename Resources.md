@@ -13,6 +13,8 @@
 
 [PubGrub: Next-Generation Version Solving with Natalie Weizenbaum](https://nex3.medium.com/pubgrub-2fb6470504f)
 
+[Improving Dependency Resolution of Python Packages, A. Schneider, 2013](https://github.com/dimitarpg13/UnderstandingPythonEcosystem/blob/main/docs/articles/dependency_resolution/Schneider2013a.pdf)
+
 [SAT-Based Combinational and Sequential Dependency Computation, Mathias Soeken et al, EPFL, 2016](https://github.com/dimitarpg13/UnderstandingPythonEcosystem/blob/main/docs/articles/dependency_resolution/SAT-Based_Combinational_and_Sequential_Dependency_Computation_Soeken_UCBerkeley_2016.pdf)
 
 [Dependency Solving Is Still Hard, but We Are Getting Better at It, Pierro Abate et al, 2020](https://github.com/dimitarpg13/UnderstandingPythonEcosystem/blob/main/docs/articles/dependency_resolution/Dependency_Solving_Is_Still_Hard_but_We_Are_Getting_Better_at_It_Abate_2020.pdf)
