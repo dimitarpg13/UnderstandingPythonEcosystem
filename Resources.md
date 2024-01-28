@@ -22,3 +22,9 @@
 [Flexible and Optimal Dependency Management via Max-SMT, Donald Pincnkey et al, NEU, 2023](https://github.com/dimitarpg13/UnderstandingPythonEcosystem/blob/main/docs/articles/dependency_resolution/Flexible_and_Optimal_Dependency_Management_via_Max-SMT_Pinckney_2023.pdf)
 
 [Fixing Dependency Errors for Python Build Reproducibility, S. Mukherjee et al, 2021](https://github.com/dimitarpg13/UnderstandingPythonEcosystem/blob/main/docs/articles/dependency_resolution/Fixing_Dependency_Errors_for_Python_Build_Reproducibility_Mukherjee_2021.pdf)
+
+### QA Automation
+
+[Record-Replay Architecture as a General Security Framework, Y. Shalabi et al, Princeton U., 2018](https://github.com/dimitarpg13/UnderstandingPythonEcosystem/blob/main/docs/articles/qa_automation/Record-Replay_Architecture_as_a_General_Security_Framework_Shalabi_hpca2018.pdf)
+
+[Design Patterns for QA Automation, A. Semenchenko](https://github.com/dimitarpg13/UnderstandingPythonEcosystem/blob/main/docs/articles/qa_automation/Design-Patterns-for-QA-Automation.pdf)
