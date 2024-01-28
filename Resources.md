@@ -25,6 +25,12 @@
 
 ### QA Automation
 
+[Unit Testing and the Arrange, Act and Assert (AAA) Pattern, Paulo Gomez, 2017](https://medium.com/@pjbgf/title-testing-code-ocd-and-the-aaa-pattern-df453975ab80)
+
+[Arrange-Act-Assert: a Pattern for Writing Good Tests](https://automationpanda.com/2020/07/07/arrange-act-assert-a-pattern-for-writing-good-tests/)
+
+[C++ Unit Testing Patterns Overview, blog](https://www.typemock.com/unit-testing-patterns-for-cpp/)
+
 [Record-Replay Architecture as a General Security Framework, Y. Shalabi et al, Princeton U., 2018](https://github.com/dimitarpg13/UnderstandingPythonEcosystem/blob/main/docs/articles/qa_automation/Record-Replay_Architecture_as_a_General_Security_Framework_Shalabi_hpca2018.pdf)
 
 [Design Patterns for QA Automation, A. Semenchenko](https://github.com/dimitarpg13/UnderstandingPythonEcosystem/blob/main/docs/articles/qa_automation/Design-Patterns-for-QA-Automation.pdf)
