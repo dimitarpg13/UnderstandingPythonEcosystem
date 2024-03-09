@@ -17,4 +17,5 @@ executor = ThreadPoolExecutor(max_workers=2)
 a = executor.submit(wait_on_b)
 b = executor.submit(wait_on_a)
 
+# this line of code will never be reached!
 print(f"Done!"")
