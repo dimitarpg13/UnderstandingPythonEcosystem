@@ -22,7 +22,7 @@ print(f"Done!")
 
 # after hitting Ctrl-C we are going to get the following exception due to the fact that lock was not acquired
 #
-# Exception ignored in: <module 'threading' from '/Users/dimitargueorguiev/.pyenv/versions/3.12.1/lib/python3.12/threading.py'>
+# Exception ignored in: <module 'threading' from '.../.pyenv/versions/3.12.1/lib/python3.12/threading.py'>
 # Traceback (most recent call last):
 #  File ".../.pyenv/versions/3.12.1/lib/python3.12/threading.py", line 1593, in _shutdown
 #    atexit_call()
