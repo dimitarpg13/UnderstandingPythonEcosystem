@@ -1,6 +1,6 @@
 
 
-Deadlock with `Future` object
+Deadlock with `Future` object - `deadlock_with_Future.py`
 ```python
 from concurrent.futures import ThreadPoolExecutor
 import time
@@ -26,7 +26,7 @@ print(f"Done!")
 ```
 
 
-Starving `ThreadPoolExecutor` object
+Starving `ThreadPoolExecutor` object - `starving_executor.py`
 ```python
  from concurrent.futures import ThreadPoolExecutor
  
