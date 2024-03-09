@@ -5,6 +5,7 @@ async def say_after(delay, what):
     await asyncio.sleep(delay)
     print(what)
 
+# calling multiple coroutines from a corotine
 async def main():
     print(f"started at {time.strftime('%X')}")
 
