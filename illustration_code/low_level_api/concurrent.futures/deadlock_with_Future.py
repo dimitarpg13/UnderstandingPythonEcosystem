@@ -12,6 +12,8 @@ def wait_on_a():
     return 6
 
 executor = ThreadPoolExecutor(max_workers=2)
+
+# the `executor.submit` invocation returns a Future object which must be waited on
 a = executor.submit(wait_on_b)
 b = executor.submit(wait_on_a)
 
