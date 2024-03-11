@@ -11,6 +11,6 @@ related PEP documents:
 
 The match statement is used for pattern matching with the following syntax:
 
-`match_stmt` ::= 'match' `subject_expr` ":" `NEWLINE` `INDENT` `case_block`+ `DEDENT`
+`match_stmt` ::= 'match' `subject_expr` ":" `NEWLINE` `INDENT` `case_block+` `DEDENT`
 
 
