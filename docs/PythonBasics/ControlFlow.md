@@ -13,5 +13,8 @@ The match statement is used for pattern matching with the following syntax:
 
 ```
 match_stmt ::= 'match' subject_expr ":" NEWLINE INDENT case_block+ DEDENT
+subject_expr ::= star_named_expression "," star_named_expressions?
+                 | named_expression
+case_block ::= 'case' patterns [guard] ":" block
 ```
 
