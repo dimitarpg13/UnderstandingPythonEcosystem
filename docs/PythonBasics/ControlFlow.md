@@ -9,4 +9,8 @@ related PEP documents:
 * [PEP 634](https://peps.python.org/pep-0634/) - Structural Pattern Matching: Specification
 * [PEP 636](https://peps.python.org/pep-0636/) - Structural Pattern Matching: Tutorial
 
- 
+The match statement is used for pattern matching with the following syntax:
+
+`match_stmt` ::= 'match' `subject_expr` ":" `NEWLINE` `INDENT` `case_block`+ `DEDENT`
+
+
