@@ -1,6 +1,6 @@
 
 
-Deadlock with `Future` object
+Deadlock with `Future` object - `deadlock_with_Future.py`
 ```python
 from concurrent.futures import ThreadPoolExecutor
 import time
@@ -26,7 +26,7 @@ print(f"Done!")
 ```
 
 
-Starving `ThreadPoolExecutor` object
+Starving `ThreadPoolExecutor` object - `starving_executor.py`
 ```python
  from concurrent.futures import ThreadPoolExecutor
  
@@ -41,4 +41,23 @@ Starving `ThreadPoolExecutor` object
  
  # this line will be executed but the program will never exit because a lock will never be acquired
  print(f"Done!")
+```
+
+In both of the examples shown below the program will not exit gracefully. Upon pressing Ctrl-C the following Exception is shown:
+```python
+Done!
+^CException ignored in: <module 'threading' from '.../.pyenv/versions/3.12.1/lib/python3.12/threading.py'>
+Traceback (most recent call last):
+  File ".../.pyenv/versions/3.12.1/lib/python3.12/threading.py", line 1593, in _shutdown
+    atexit_call()
+  File ".../.pyenv/versions/3.12.1/lib/python3.12/concurrent/futures/thread.py", line 31, in _python_exit
+    t.join()
+  File ".../.pyenv/versions/3.12.1/lib/python3.12/threading.py", line 1147, in join
+    self._wait_for_tstate_lock()
+  File ".../.pyenv/versions/3.12.1/lib/python3.12/threading.py", line 1167, in _wait_for_tstate_lock
+    if lock.acquire(block, timeout):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt: 
+
+
 ```
