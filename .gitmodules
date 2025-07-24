@@ -1,3 +1,0 @@
-[submodule "pandas"]
-	path = pandas
-	url = https://github.com/dimitarpg13/pandas.git
