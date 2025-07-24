@@ -4,3 +4,6 @@
 [submodule "arrow"]
 	path = arrow
 	url = https://github.com/dimitarpg13/arrow
+[submodule "abseil-cpp"]
+	path = abseil-cpp
+	url = https://github.com/dimitarpg13/abseil-cpp
