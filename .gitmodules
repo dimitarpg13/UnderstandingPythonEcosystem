@@ -1,6 +1,3 @@
-[submodule "arrow"]
-	path = arrow
-	url = https://github.com/dimitarpg13/arrow.git
 [submodule "flatbuffers"]
 	path = flatbuffers
 	url = https://github.com/dimitarpg13/flatbuffers.git
